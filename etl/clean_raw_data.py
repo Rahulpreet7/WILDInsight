@@ -29,6 +29,17 @@ def clean_categorical(df):
     df['intake_type'] = df['intake_type'].str.title().fillna('Unknown')
     df['animal_type'] = df['animal_type'].str.title().fillna('Unknown')
     df['found_location'] = df['found_location'].astype(str).str.strip().replace('', 'Unknown')
+
+    # Clean additional columns
+    df['name'] = df['name'].replace({'None': 'No Name', None: 'No Name', '': 'No Name'})
+    df['name'] = df['name'].astype(str).str.strip()
+    # Remove leading asterisks and whitespace, capitalize name
+    df['name'] = df['name'].str.replace(r'^\*+', '', regex=True).str.strip().str.title()
+    df['sex_upon_intake'] = df['sex_upon_intake'].astype(str).str.title().replace({'Nan': 'Unknown', '': 'Unknown'})
+    df['age_upon_intake'] = df['age_upon_intake'].astype(str).str.title().replace({'Nan': 'Unknown', '': 'Unknown'})
+    df['breed'] = df['breed'].astype(str).str.title().str.strip().replace({'': 'Unknown', 'Nan': 'Unknown'})
+    df['color'] = df['color'].astype(str).str.title().str.replace('/', '-').str.replace(';', '-').str.replace('&', 'And').str.strip()
+
     return df
 
 def save_cleaned_data(df, output_path):
